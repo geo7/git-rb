@@ -87,8 +87,8 @@ def run_git_rb():
             main()
         except SystemExit as e:
             exit_code = e.code if e.code is not None else 1
-        except Exception as e:
-            raise e
+        except Exception:
+            raise
         finally:
             sys.argv = original_argv
             sys.stdout = old_stdout

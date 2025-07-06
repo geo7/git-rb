@@ -82,10 +82,13 @@ unfixable = []
 "tests/*" = [
     "ANN001",  #  Missing type annotation for function argument `tmpdir`
     "ANN201",  #  Missing return type annotation for public function `test_get_file_types`
+    "ARG001",  # Unused function argument: `mock_prompt_ask`
     "D100",    #  Missing docstring in public module
     "D101",    #  Missing docstring in public class
     "D102",    #  Missing docstring in public method
     "S101",    #  Use of `assert` detected
+    "S607",    # Starting a process with a partial executable path
+
 ]
 
 [tool.ruff.lint.isort]

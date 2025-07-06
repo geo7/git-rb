@@ -1,3 +1,4 @@
+
 """Simple script for rebase workflow."""
 
 import subprocess
@@ -23,7 +24,7 @@ def run_git_command(cmd: list[str]) -> str:
         )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        console.print(f"[red]Error: {e.stderr.strip()}[/red]")
+        sys.stderr.write(f"[red]Error: {e.stderr.strip()}[/red]\n")
         sys.exit(1)
 
 
@@ -48,7 +49,7 @@ def main() -> None:
     log_output = run_git_command(["log", "-n15", f"--pretty=format:{log_format}"])
 
     if not log_output:
-        console.print("[red]Error: No commits found.[/red]")
+        sys.stderr.write("[red]Error: No commits found.[/red]\n")
         sys.exit(1)
 
     # Parse commits
@@ -94,28 +95,38 @@ def main() -> None:
         selection = Prompt.ask("Enter the number of the commit to rebase from", default="q")
         if selection.lower() == "q":
             console.print("Aborting.")
-            return
+            sys.exit(0) # Exit with 0 on abort
 
         index = int(selection) - 1
         if not 0 <= index < len(commits):
-            console.print("[red]Error: Number out of range.[/red]")
+            sys.stderr.write("[red]Error: Number out of range.[/red]\n")
             sys.exit(1)
 
         # Execute rebase
         rebase_hash = commits[index]["hash"]
         console.print(f"\n[green]Running command:[/green] git rebase -i {rebase_hash}^")
-        subprocess.run(
-            [  # noqa: S607
-                "git",
-                "rebase",
-                "-i",
-                f"{rebase_hash}^",
-            ],
-            check=True,
-        )
+        try:
+            rebase_result = subprocess.run(
+                [  # noqa: S607
+                    "git",
+                    "rebase",
+                    "-i",
+                    f"{rebase_hash}^",
+                ],
+                check=True,
+                capture_output=True, # Explicitly capture output
+                text=True, # Ensure output is text
+            )
+            if rebase_result.stdout:
+                console.print(rebase_result.stdout.strip())
+            if rebase_result.stderr:
+                sys.stderr.write(rebase_result.stderr.strip() + "\n") # Write stderr to sys.stderr
+        except subprocess.CalledProcessError as e:
+            sys.stderr.write(f"[red]Error during rebase: {e.stderr.strip()}[/red]\n")
+            sys.exit(1)
 
     except ValueError:
-        console.print("[red]Error: Invalid input. Please enter a number.[/red]")
+        sys.stderr.write("[red]Error: Invalid input. Please enter a number.[/red]\n")
         sys.exit(1)
 
 

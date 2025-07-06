@@ -1,4 +1,6 @@
 
+from git_rb import __version__
+
 def test_version() -> None:
     # Ensure toml version is in sync with package version.
     with open("pyproject.toml") as f:

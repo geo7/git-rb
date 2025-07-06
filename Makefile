@@ -64,6 +64,6 @@ install: uv.lock
 ##########
 
 test: ## run tests
-	uv run pytest -vv --cov=mypy_clean_slate --cov-report=html
+	uv run pytest -vv --cov=git_rb --cov-report=html
 	uv run coverage html
 	@$(MAKE) --no-print-directory clean

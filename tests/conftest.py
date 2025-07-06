@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+from git_rb.main import main
+
 
 @pytest.fixture
 def git_repo(tmp_path: Path):
@@ -61,9 +63,7 @@ def run_git_rb():
     It returns a callable that takes arguments for git-rb and an optional cwd.
     """
 
-    def _runner(*args, cwd: Path = None):
-        from git_rb.main import main
-
+    def _runner(*args: list[str], cwd: Path | None = None) -> tuple[int, str, str]:
         original_cwd = Path.cwd()
         if cwd:
             os.chdir(cwd)

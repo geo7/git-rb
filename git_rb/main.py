@@ -11,7 +11,7 @@ from rich.table import Table
 console = Console()
 
 
-def run_git_command(cmd: list[str]) -> str:
+def run_git_command(cmd: list[str]) -> str | None:
     """Run command with git."""
     try:
         result = subprocess.run(
@@ -28,13 +28,12 @@ def run_git_command(cmd: list[str]) -> str:
 
 def create_parser() -> argparse.ArgumentParser:
     """Create the argument parser for the git-rb tool."""
-    parser = argparse.ArgumentParser(
+    return argparse.ArgumentParser(
         description="Git rebase workflow tool.",
     )
-    return parser
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901
     parser = create_parser()
     parser.parse_args()
     # Verify we're in a git repo
@@ -49,6 +48,8 @@ def main() -> None:
     if not log_output:
         sys.stderr.write("[red]Error: No commits found.[/red]\n")
         sys.exit(1)
+
+    assert isinstance(log_output, str)
 
     # Parse commits
     commits = []

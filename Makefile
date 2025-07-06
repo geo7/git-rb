@@ -35,10 +35,10 @@ readme:
 pre-commit-run:
 	uv run pre-commit run --all-files
 
-mypy:
-	uv run mypy --strict .
+ty:
+	uv run ty check . -v
 
-lint: mypy
+lint: ty
 	uv run ruff check .
 	uv run ruff format . --check
 	@$(MAKE) --no-print-directory clean
@@ -58,6 +58,11 @@ uv.lock:
 install: uv.lock
 	uv sync --all-extras
 	@$(MAKE) --no-print-directory clean
+
+nuke:
+	uv clean
+	rm -rf .venv
+	@$(MAKE) --no-print-directory install
 
 ##########
 # PYTEST #

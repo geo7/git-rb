@@ -12,16 +12,14 @@ console = Console()
 
 def run_git_command(cmd):
     try:
-        result = subprocess.run(
-            ["git"] + cmd, check=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
+        result = subprocess.run(["git", *cmd], check=True, text=True, capture_output=True)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         console.print(f"[red]Error: {e.stderr.strip()}[/red]")
         sys.exit(1)
 
 
-def main():
+def main() -> None:
     # Verify we're in a git repo
     run_git_command(["rev-parse", "--is-inside-work-tree"])
 

@@ -56,6 +56,39 @@ def git_repo(tmp_path: Path):
 
 
 @pytest.fixture
+def git_repo_no_commits(tmp_path: Path):
+    """
+    Pytest fixture to create a temporary Git repository.
+
+    Yields the path to the temporary repository.
+    """
+    original_cwd = Path.cwd()
+    os.chdir(tmp_path)  # Change to the temporary directory
+
+    # Initialize a Git repository
+    subprocess.run(["git", "init", "-b", "main"], check=True, capture_output=True)
+
+    # Configure Git user for commits
+    subprocess.run(["git", "config", "user.email", "test@example.com"], check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], check=True)
+
+    # Create a dummy editor script that just exits successfully
+    editor_script = tmp_path / "git_editor.sh"
+    editor_script.write_text("#!/bin/bash\nexit 0")
+    editor_script.chmod(0o755)  # Make it executable
+
+    # Set GIT_EDITOR to the path of the dummy editor script
+    os.environ["GIT_EDITOR"] = str(editor_script)
+
+    # Yield the path to the temporary repository
+    yield tmp_path
+
+    # Teardown: Change back to the original working directory and unset GIT_EDITOR
+    os.chdir(original_cwd)
+    del os.environ["GIT_EDITOR"]
+
+
+@pytest.fixture
 def run_git_rb():
     """
     Fixture to run the git-rb command.

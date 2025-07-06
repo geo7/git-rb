@@ -127,3 +127,12 @@ def test_git_rb_not_in_git_repo(mock_prompt_ask, tmp_path: Path, run_git_rb):
     assert exit_code == 1  # Expect SystemExit(1)
     assert "Error:" in stderr  # Or similar git error message
     assert not stdout
+
+
+@patch.object(Prompt, "ask")
+def test_git_rb_no_commits(mock_prompt_ask, git_repo_no_commits, run_git_rb):
+    """Test a successful interactive rebase scenario."""
+    mock_prompt_ask.return_value = "2"
+    exit_code, _, stderr = run_git_rb(cwd=git_repo_no_commits)
+    assert exit_code == 1
+    assert "Error: fatal: your current branch 'main' does not have any commits yet" in stderr

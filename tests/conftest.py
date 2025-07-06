@@ -70,11 +70,10 @@ def run_git_rb():
         # Capture stdout/stderr
         old_stdout = sys.stdout
         old_stderr = sys.stderr
-        # QUESTION: what's going on here? we have "sys.stdout = captured_stdout
-        # = StringIO()", so we're setting both captured_stdout and sys.stdout
-        # to be StringIO(), just empty IO ? I don't see captured_stdout
-        # explicitly set anywhere else, so i'm wondering about the logic / flow
-        # of things.
+       
+        # Capture stdout/stderr as StringIO objects,
+        # captured_stdout/captured_stderr ensure stable references to these
+        # values.
         sys.stdout = captured_stdout = StringIO()
         sys.stderr = captured_stderr = StringIO()
 
@@ -93,7 +92,6 @@ def run_git_rb():
             if cwd:
                 os.chdir(original_cwd) 
 
-        # QUESTION: Where were captured_stdout etc actually assigned values?
         return exit_code, captured_stdout.getvalue(), captured_stderr.getvalue()
 
     return _runner

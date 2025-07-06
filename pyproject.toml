@@ -1,5 +1,5 @@
 [project]
-name = "git_rb"
+name = "git-rb"
 version = "0.1.0"
 description = "Interface for git rebase."
 authors = [{ name = "George Lenton", email = "georgelenton@gmail.com" }]
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/geo7"
+Homepage = "https://github.com/geo7/git-rb"
 
 [project.scripts]
 git-rb = "git_rb.main:main"

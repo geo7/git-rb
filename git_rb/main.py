@@ -28,6 +28,10 @@ def run_git_command(cmd: list[str]) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Git rebase workflow tool.",
+    )
+    parser.parse_args()
     # Verify we're in a git repo
     run_git_command(["rev-parse", "--is-inside-work-tree"])
 
@@ -110,7 +114,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Git rebase workflow tool.",
-    )
     main()

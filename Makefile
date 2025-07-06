@@ -4,6 +4,7 @@
 .PHONY: test
 .PHONY: requirements
 .PHONY: help
+.PHONY: publish
 
 CLOC := cloc
 
@@ -63,6 +64,10 @@ nuke:
 	uv clean
 	rm -rf .venv
 	@$(MAKE) --no-print-directory install
+
+
+publish: ## Publish package to PyPI
+	@bash ./scripts/publish.sh
 
 ##########
 # PYTEST #

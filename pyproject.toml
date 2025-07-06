@@ -22,7 +22,7 @@ Homepage = "https://github.com/geo7"
 #rb = !uv run $HOME/bin/git-scripts/rebase-prompt.py
 #
 #and rebase-prompt.py will just run the main(), I guess I'll want to have a similar thing here.
-mypy_clean_slate = "git_rb.main:main"
+git_rb = "git_rb.main:main"
 
 [project.optional-dependencies]
 dev = [

@@ -2,10 +2,12 @@
 
 import subprocess
 import sys
+import argparse
 
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
+
 
 console = Console()
 
@@ -108,4 +110,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Git rebase workflow tool.",
+    )
     main()

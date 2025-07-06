@@ -10,7 +10,7 @@
 often I'd find my self copying hashes from `git log` output in order to paste
 into `git rebase -i`. This tools only purpose is to simplify that.
 
-Code is self contained within `main.py`, so you might like to simply copy the whole thing.
+Code is self contained within `main.py`, so you could just copy the whole script.
 
 ## Usage
 

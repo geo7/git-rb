@@ -1,14 +1,12 @@
-
 """Simple script for rebase workflow."""
 
+import argparse
 import subprocess
 import sys
-import argparse
 
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
-
 
 console = Console()
 
@@ -95,7 +93,7 @@ def main() -> None:
         selection = Prompt.ask("Enter the number of the commit to rebase from", default="q")
         if selection.lower() == "q":
             console.print("Aborting.")
-            sys.exit(0) # Exit with 0 on abort
+            sys.exit(0)  # Exit with 0 on abort
 
         index = int(selection) - 1
         if not 0 <= index < len(commits):
@@ -114,13 +112,13 @@ def main() -> None:
                     f"{rebase_hash}^",
                 ],
                 check=True,
-                capture_output=True, # Explicitly capture output
-                text=True, # Ensure output is text
+                capture_output=True,  # Explicitly capture output
+                text=True,  # Ensure output is text
             )
             if rebase_result.stdout:
                 console.print(rebase_result.stdout.strip())
             if rebase_result.stderr:
-                sys.stderr.write(rebase_result.stderr.strip() + "\n") # Write stderr to sys.stderr
+                sys.stderr.write(rebase_result.stderr.strip() + "\n")  # Write stderr to sys.stderr
         except subprocess.CalledProcessError as e:
             sys.stderr.write(f"[red]Error during rebase: {e.stderr.strip()}[/red]\n")
             sys.exit(1)

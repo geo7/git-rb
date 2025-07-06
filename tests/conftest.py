@@ -1,10 +1,11 @@
-import pytest
-import subprocess
 import os
-from pathlib import Path
-from io import StringIO
+import subprocess
 import sys
-from unittest.mock import patch
+from io import StringIO
+from pathlib import Path
+
+import pytest
+
 
 @pytest.fixture
 def git_repo(tmp_path: Path):
@@ -14,7 +15,7 @@ def git_repo(tmp_path: Path):
     Yields the path to the temporary repository.
     """
     original_cwd = Path.cwd()
-    os.chdir(tmp_path) # Change to the temporary directory
+    os.chdir(tmp_path)  # Change to the temporary directory
 
     # Initialize a Git repository
     subprocess.run(["git", "init", "-b", "main"], check=True, capture_output=True)
@@ -26,7 +27,7 @@ def git_repo(tmp_path: Path):
     # Create a dummy editor script that just exits successfully
     editor_script = tmp_path / "git_editor.sh"
     editor_script.write_text("#!/bin/bash\nexit 0")
-    editor_script.chmod(0o755) # Make it executable
+    editor_script.chmod(0o755)  # Make it executable
 
     # Set GIT_EDITOR to the path of the dummy editor script
     os.environ["GIT_EDITOR"] = str(editor_script)
@@ -51,12 +52,15 @@ def git_repo(tmp_path: Path):
     os.chdir(original_cwd)
     del os.environ["GIT_EDITOR"]
 
+
 @pytest.fixture
 def run_git_rb():
-    """Fixture to run the git-rb command.
+    """
+    Fixture to run the git-rb command.
 
     It returns a callable that takes arguments for git-rb and an optional cwd.
     """
+
     def _runner(*args, cwd: Path = None):
         from git_rb.main import main
 
@@ -70,7 +74,7 @@ def run_git_rb():
         # Capture stdout/stderr
         old_stdout = sys.stdout
         old_stderr = sys.stderr
-       
+
         # Capture stdout/stderr as StringIO objects,
         # captured_stdout/captured_stderr ensure stable references to these
         # values.
@@ -90,7 +94,7 @@ def run_git_rb():
             sys.stdout = old_stdout
             sys.stderr = old_stderr
             if cwd:
-                os.chdir(original_cwd) 
+                os.chdir(original_cwd)
 
         return exit_code, captured_stdout.getvalue(), captured_stderr.getvalue()
 

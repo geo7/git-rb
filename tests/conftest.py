@@ -11,25 +11,20 @@ from git_rb.main import main
 
 @pytest.fixture
 def git_repo(tmp_path: Path):
-    """
-    Pytest fixture to create a temporary Git repository.
-
-    Yields the path to the temporary repository.
-    """
+    """Create git repo with commits."""
     original_cwd = Path.cwd()
-    os.chdir(tmp_path)  # Change to the temporary directory
+    os.chdir(tmp_path)
 
-    # Initialize a Git repository
     subprocess.run(["git", "init", "-b", "main"], check=True, capture_output=True)
 
-    # Configure Git user for commits
     subprocess.run(["git", "config", "user.email", "test@example.com"], check=True)
     subprocess.run(["git", "config", "user.name", "Test User"], check=True)
 
-    # Create a dummy editor script that just exits successfully
+    # dummy editor that'll just exit with OK, rebase can open an interactive
+    # editor, don't want that in testing.
     editor_script = tmp_path / "git_editor.sh"
     editor_script.write_text("#!/bin/bash\nexit 0")
-    editor_script.chmod(0o755)  # Make it executable
+    editor_script.chmod(0o755)
 
     # Set GIT_EDITOR to the path of the dummy editor script
     os.environ["GIT_EDITOR"] = str(editor_script)
@@ -38,11 +33,9 @@ def git_repo(tmp_path: Path):
     (tmp_path / "file1.txt").write_text("initial content")
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "feat: Initial commit"], check=True)
-
     (tmp_path / "file2.txt").write_text("second file")
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "feat: Add second file"], check=True)
-
     (tmp_path / "file1.txt").write_text("updated content")
     subprocess.run(["git", "add", "."], check=True)
     subprocess.run(["git", "commit", "-m", "fix: Update file1"], check=True)
@@ -50,40 +43,25 @@ def git_repo(tmp_path: Path):
     # Yield the path to the temporary repository
     yield tmp_path
 
-    # Teardown: Change back to the original working directory and unset GIT_EDITOR
     os.chdir(original_cwd)
     del os.environ["GIT_EDITOR"]
 
 
 @pytest.fixture
 def git_repo_no_commits(tmp_path: Path):
-    """
-    Pytest fixture to create a temporary Git repository.
-
-    Yields the path to the temporary repository.
-    """
+    """Create git repo with no commits."""
     original_cwd = Path.cwd()
     os.chdir(tmp_path)  # Change to the temporary directory
-
-    # Initialize a Git repository
     subprocess.run(["git", "init", "-b", "main"], check=True, capture_output=True)
-
-    # Configure Git user for commits
     subprocess.run(["git", "config", "user.email", "test@example.com"], check=True)
     subprocess.run(["git", "config", "user.name", "Test User"], check=True)
-
-    # Create a dummy editor script that just exits successfully
     editor_script = tmp_path / "git_editor.sh"
     editor_script.write_text("#!/bin/bash\nexit 0")
     editor_script.chmod(0o755)  # Make it executable
-
-    # Set GIT_EDITOR to the path of the dummy editor script
     os.environ["GIT_EDITOR"] = str(editor_script)
 
-    # Yield the path to the temporary repository
     yield tmp_path
 
-    # Teardown: Change back to the original working directory and unset GIT_EDITOR
     os.chdir(original_cwd)
     del os.environ["GIT_EDITOR"]
 
@@ -91,9 +69,9 @@ def git_repo_no_commits(tmp_path: Path):
 @pytest.fixture
 def run_git_rb():
     """
-    Fixture to run the git-rb command.
+    Run git-rb command.
 
-    It returns a callable that takes arguments for git-rb and an optional cwd.
+    Returns a callable that takes arguments for git-rb and optional cwd.
     """
 
     def _runner(*args: list[str], cwd: Path | None = None) -> tuple[int, str, str]:

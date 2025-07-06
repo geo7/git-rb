@@ -27,10 +27,16 @@ def run_git_command(cmd: list[str]) -> str:
         sys.exit(1)
 
 
-def main() -> None:
+def create_parser() -> argparse.ArgumentParser:
+    """Create the argument parser for the git-rb tool."""
     parser = argparse.ArgumentParser(
         description="Git rebase workflow tool.",
     )
+    return parser
+
+
+def main() -> None:
+    parser = create_parser()
     parser.parse_args()
     # Verify we're in a git repo
     run_git_command(["rev-parse", "--is-inside-work-tree"])

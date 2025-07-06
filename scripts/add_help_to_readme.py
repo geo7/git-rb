@@ -8,8 +8,6 @@ the parsers help output.
 from io import StringIO
 from pathlib import Path
 
-from mypy_clean_slate.main import create_parser
-
 
 def cli_help_text() -> str:
     """Get --help from argparse parser."""

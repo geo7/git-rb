@@ -10,9 +10,15 @@ from rich.table import Table
 console = Console()
 
 
-def run_git_command(cmd):
+def run_git_command(cmd: list[str]) -> str:
+    """Run command with git."""
     try:
-        result = subprocess.run(["git", *cmd], check=True, text=True, capture_output=True)
+        result = subprocess.run(
+            ["git", *cmd],  # noqa: S607
+            check=True,
+            text=True,
+            capture_output=True,
+        )
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         console.print(f"[red]Error: {e.stderr.strip()}[/red]")
@@ -38,7 +44,8 @@ def main() -> None:
     for line in log_output.split("\n"):
         if line.strip():
             parts = line.split("|~|")
-            if len(parts) == 5:
+            expected_n_parts = 5
+            if len(parts) == expected_n_parts:
                 commits.append(
                     {
                         "hash": parts[0],
@@ -85,7 +92,15 @@ def main() -> None:
         # Execute rebase
         rebase_hash = commits[index]["hash"]
         console.print(f"\n[green]Running command:[/green] git rebase -i {rebase_hash}^")
-        subprocess.run(["git", "rebase", "-i", f"{rebase_hash}^"], check=True)
+        subprocess.run(
+            [  # noqa: S607
+                "git",
+                "rebase",
+                "-i",
+                f"{rebase_hash}^",
+            ],
+            check=True,
+        )
 
     except ValueError:
         console.print("[red]Error: Invalid input. Please enter a number.[/red]")

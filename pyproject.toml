@@ -1,6 +1,6 @@
 [project]
 name = "git-rb"
-version = "0.1.1"
+version = "0.1.2"
 description = "Simple CLI for interactive git rebase workflow."
 authors = [{ name = "George Lenton", email = "georgelenton@gmail.com" }]
 license = { text = "MIT" }

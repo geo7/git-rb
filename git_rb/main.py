@@ -38,12 +38,8 @@ def create_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = create_parser()
     parser.parse_args()
-    # Verify we're in a git repo
     run_git_command(["rev-parse", "--is-inside-work-tree"])
 
-    console.print(f"[cyan]Fetching the last {LAST_N_COMMITS} commits...[/cyan]")
-
-    # Get commits with custom format
     log_format = "%h|~|%d|~|%s|~|%ar|~|%an"
     log_output = run_git_command(["log", f"-n{LAST_N_COMMITS}", f"--pretty=format:{log_format}"])
 
@@ -91,19 +87,17 @@ def main() -> None:
 
     console.print(table)
 
-    # Get user selection
     try:
         selection = Prompt.ask("Enter the number of the commit to rebase from", default="q")
         if selection.lower() == "q":
             console.print("Aborting.")
-            sys.exit(0)  # Exit with 0 on abort
+            sys.exit(0)
 
         index = int(selection) - 1
         if not 0 <= index < len(commits):
             sys.stderr.write("[red]Error: Number out of range.[/red]\n")
             sys.exit(1)
 
-        # Execute rebase
         rebase_hash = commits[index]["hash"]
         console.print(f"\n[green]Running command:[/green] git rebase -i {rebase_hash}^")
         try:

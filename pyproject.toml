@@ -1,7 +1,7 @@
 [project]
 name = "git-rb"
 version = "0.1.1"
-description = "Interface for git rebase."
+description = "Simple CLI for interactive git rebase workflow."
 authors = [{ name = "George Lenton", email = "georgelenton@gmail.com" }]
 license = { text = "MIT" }
 readme = "README.md"
@@ -13,6 +13,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/geo7/git-rb"
+Repository = "https://github.com/geo7/git-rb"
 
 [project.scripts]
 git-rb = "git_rb.main:main"
@@ -75,16 +76,15 @@ unfixable = []
 "__init__.py" = ["F401"]
 "scratch/*" = ["ALL"]
 "tests/*" = [
-
     "ANN001",  #  Missing type annotation for function argument `tmpdir`
     "ANN201",  #  Missing return type annotation for public function `test_get_file_types`
     "ARG001",  # Unused function argument: `mock_prompt_ask`
     "D100",    #  Missing docstring in public module
     "D101",    #  Missing docstring in public class
     "D102",    #  Missing docstring in public method
+    "D205",    # 1 blank line required between summary line and description
     "S101",    #  Use of `assert` detected
     "S607",    # Starting a process with a partial executable path
-
 ]
 
 [tool.ruff.lint.isort]

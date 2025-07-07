@@ -38,3 +38,13 @@ Running this from sklearn gives:
 Entering '6' in the prompt just runs `git rebase -i <hash on line 6>`, nothing fancy!
 
 ![Screenshot of git-rb in action](imgs/img1.png)
+
+## Simple
+
+A simpler approach would be to just use:
+
+```sh
+git rebase -i HEAD~{{ N }}
+```
+
+That would mean no messing about with `rich` though.

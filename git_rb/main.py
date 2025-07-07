@@ -67,21 +67,28 @@ def main() -> None:
                 )
 
     # Display commits using Rich Table
-    table = Table(title="Recent Commits", show_header=True, header_style="bold magenta")
-    table.add_column("Index", style="dim", width=6)
-    table.add_column("Hash", style="red")
-    table.add_column("Decorations", style="yellow")
+    table = Table(title="", show_header=True, header_style="bold magenta")
+    table.add_column("Index", style="dim", width=5)
     table.add_column("Subject", style="white")
+    table.add_column("Hash", style="red")
     table.add_column("Date", style="green")
+    table.add_column("Decorations", style="yellow")
     table.add_column("Author", style="blue bold")
 
     for i, commit in enumerate(commits, 1):
+        if commit["decorations"]:
+            decorations_len = len(commit["decorations"])
+            decorations_output_len = min([decorations_len, 15])
+            decorations = commit["decorations"][:decorations_output_len] + " ..."
+        else:
+            decorations = ""
+
         table.add_row(
-            f"{i:2d}",
-            commit["hash"],
-            commit["decorations"] or "",
+            f"{i:3d}",
             commit["subject"],
+            commit["hash"],
             commit["date"],
+            decorations,
             commit["author"],
         )
 
@@ -90,7 +97,6 @@ def main() -> None:
     try:
         selection = Prompt.ask("Enter the number of the commit to rebase from", default="q")
         if selection.lower() == "q":
-            console.print("Aborting.")
             sys.exit(0)
 
         index = int(selection) - 1

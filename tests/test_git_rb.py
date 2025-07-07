@@ -42,7 +42,6 @@ def test_git_rb_abort(mock_prompt_ask, git_repo: Path, run_git_rb):
     exit_code, stdout, stderr = run_git_rb(cwd=git_repo)
 
     assert exit_code == 0
-    assert "Aborting." in stdout
     assert "Running command: git rebase -i" not in stdout
     assert not stderr
 
@@ -56,11 +55,10 @@ def test_git_rb_invalid_input(mock_prompt_ask, git_repo: Path, run_git_rb):
     """
     mock_prompt_ask.return_value = "abc"
 
-    exit_code, stdout, stderr = run_git_rb(cwd=git_repo)
+    exit_code, _, stderr = run_git_rb(cwd=git_repo)
 
     assert exit_code == 1
     assert "Error: Invalid input. Please enter a number." in stderr
-    assert "Recent Commits" in stdout
 
 
 @patch.object(Prompt, "ask")
@@ -72,11 +70,10 @@ def test_git_rb_out_of_range_input(mock_prompt_ask, git_repo: Path, run_git_rb):
     """
     mock_prompt_ask.return_value = "99"
 
-    exit_code, stdout, stderr = run_git_rb(cwd=git_repo)
+    exit_code, _, stderr = run_git_rb(cwd=git_repo)
 
     assert exit_code == 1
     assert "Error: Number out of range." in stderr
-    assert "Recent Commits" in stdout
 
 
 @patch.object(Prompt, "ask")

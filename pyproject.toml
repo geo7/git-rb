@@ -91,3 +91,8 @@ unfixable = []
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 case-sensitive = true
 combine-as-imports = true
+
+
+[tool.ruff.lint.mccabe]
+# Flag errors (`C901`) whenever the complexity level exceeds 11.
+max-complexity = 11
